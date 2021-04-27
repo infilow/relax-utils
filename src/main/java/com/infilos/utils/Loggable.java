@@ -1,7 +1,11 @@
 package com.infilos.utils;
 
+import ch.qos.logback.classic.LoggerContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhiguang.zhang on 2020-12-09.
@@ -24,7 +28,7 @@ public interface Loggable {
      * @param level is target logger level
      */
     static void switchRootLevel(Level level) {
-        ((ch.qos.logback.classic.Logger)LoggerFactory
+        ((ch.qos.logback.classic.Logger) LoggerFactory
             .getLogger(ch.qos.logback.classic.Logger.ROOT_LOGGER_NAME)).setLevel(level.under);
     }
 
@@ -35,7 +39,7 @@ public interface Loggable {
      * @param level is target logger level
      */
     static void switchLoggerLevel(String name, Level level) {
-        ((ch.qos.logback.classic.Logger)LoggerFactory.getLogger(name)).setLevel(level.under);
+        ((ch.qos.logback.classic.Logger) LoggerFactory.getLogger(name)).setLevel(level.under);
     }
 
     enum Level {
@@ -60,5 +64,14 @@ public interface Loggable {
 
     static Logger logger(Class<?> clazz, String name) {
         return LoggerFactory.getLogger(clazz.getSimpleName() + "[" + name + "]");
+    }
+
+    /**
+     * Only support logger binding of {@link ch.qos.logback.classic.Logger}
+     */
+    static List<Logger> loggers() {
+        return ((LoggerContext) LoggerFactory.getILoggerFactory()).getLoggerList()
+            .stream().map(logger -> (Logger) logger)
+            .collect(Collectors.toList());
     }
 }

@@ -2,6 +2,7 @@ package com.infilos.utils;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -22,5 +23,11 @@ public class ResourceTest {
         assertNotNull(Resource.readAsStream("file.txt"));
         assertEquals(3, Resource.readAsLines("file.txt").size());
         assertEquals("a\nb\nc", Resource.readAsString("file.txt"));
+    }
+    
+    @Test
+    public void write() throws IOException {
+        Resource.writeResource("alphabet.txt", "abcdefg".getBytes());
+        assertEquals("abcdefg", Resource.readAsString("alphabet.txt"));
     }
 }

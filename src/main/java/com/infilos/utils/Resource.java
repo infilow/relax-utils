@@ -2,6 +2,7 @@ package com.infilos.utils;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,37 @@ public final class Resource {
         return String.join("\n", readAsLines(pathOfResource));
     }
     
+    public static byte[] readAsBytes(String pathOfResource) throws URISyntaxException, IOException {
+        File file = Resource.readAsFile(pathOfResource);
+        byte[] bytes = new byte[(int) file.length()];
+        
+        try(DataInputStream stream = new DataInputStream(new FileInputStream(file))) {
+            stream.readFully(bytes);
+        }
+        
+        return bytes;
+    }
+
     private static String fixPathOfResource(String pathOfResource) {
         return pathOfResource.startsWith("/") ? pathOfResource:"/" + pathOfResource;
+    }
+
+    /**
+     * File would appear in "/target/classes" or "/target/test-classes".
+     */
+    public static File writeResource(String filename, byte[] bytes) throws IOException {
+        Path resource = Paths.get(Resource.class.getResource("/").getPath());
+        File file = new File(resource.toAbsolutePath() + fixPathOfResource(filename));
+        
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        Files.write(file.toPath(), bytes);
+        
+        return file;
+    }
+
+    public static File writeResource(String filename, String string) throws IOException { 
+        return writeResource(filename, string.getBytes());
     }
 }

@@ -41,6 +41,24 @@ public final class Encoder {
         return new String(Base64.getDecoder().decode(b64), StandardCharsets.UTF_8);
     }
 
+    public static byte[] asBase64(byte[] plainBytes) {
+        return Base64.getEncoder().encode(plainBytes);
+    }
+
+    public static byte[] ofBase64(byte[] b64Bytes) {
+        return Base64.getDecoder().decode(b64Bytes);
+    }
+
+    // NOTE: base-64 decode is mutch faster than regex.
+    public static boolean isBase64(String b64) {
+        try {
+            ofBase64(b64);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
     private static final char[] Digits = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -71,7 +89,7 @@ public final class Encoder {
      */
     public static long numericToDecimal(String num, int seed) {
         char[] charBuf = num.toCharArray();
-        if (seed == 10) {
+        if (seed==10) {
             return Long.parseLong(num);
         }
 
@@ -80,7 +98,7 @@ public final class Encoder {
         for (int i = charBuf.length - 1; i >= 0; i--) {
             int index = 0;
             for (int j = 0, length = Digits.length; j < length; j++) {
-                if (Digits[j] == charBuf[i]) {
+                if (Digits[j]==charBuf[i]) {
                     index = j;
                 }
             }

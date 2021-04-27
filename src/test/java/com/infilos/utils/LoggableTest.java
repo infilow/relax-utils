@@ -2,7 +2,7 @@ package com.infilos.utils;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author zhiguang.zhang on 2020-12-09.
@@ -29,5 +29,7 @@ public class LoggableTest implements Loggable {
 
         Loggable.switchLoggerLevel("com.infilos", Level.INFO);
         log().info("test log 4");   // available
+        
+        Loggable.loggers().forEach(logger -> System.out.println(logger.getName()));
     }
 }

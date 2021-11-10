@@ -6,7 +6,7 @@
 
     <groupId>com.infilos</groupId>
     <artifactId>relax-utils</artifactId>
-    <version>0.5.0</version>
+    <version>0.7.0</version>
     <packaging>jar</packaging>
 
     <properties>

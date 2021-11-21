@@ -6,7 +6,7 @@
 
     <groupId>com.infilos</groupId>
     <artifactId>relax-utils</artifactId>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -212,15 +212,6 @@
                         <groupId>org.jreleaser</groupId>
                         <artifactId>jreleaser-maven-plugin</artifactId>
                         <version>0.8.0</version>
-                        <configuration>
-                            <jreleaser>
-                                <release>
-                                    <github>
-                                        <owner>infilos</owner>
-                                    </github>
-                                </release>
-                            </jreleaser>
-                        </configuration>
                     </plugin>
                 </plugins>
             </build>

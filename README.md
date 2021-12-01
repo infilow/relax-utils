@@ -1,6 +1,6 @@
 # relax-utils
 
-Simple utils to relax my life.
+Simple utils to relax my life. See the [documents](https://relax.infilos.com/relax-utils/index.html) for more detail...
 
 ## Contributions
 

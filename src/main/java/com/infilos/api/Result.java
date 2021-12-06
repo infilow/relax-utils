@@ -38,12 +38,12 @@ public interface Result<T> {
 
     // below are factories
 
-    static <T> Result<T> ok(final T value) {
+    static <T> Result<T> succed(final T value) {
         Require.checkNotNull(value, "The value of a Result cannot be null");
         return new Succed<>(value);
     }
 
-    static <T, E extends Throwable> Result<T> error(final E throwable) {
+    static <T, E extends Throwable> Result<T> failed(final E throwable) {
         Require.checkNotNull(throwable, "The error of a Result cannot be null");
         return new Failed<>(throwable);
     }
@@ -52,9 +52,9 @@ public interface Result<T> {
         Require.checkNotNull(supplier, "The value supplier cannot be null");
 
         try {
-            return ok(supplier.get());
+            return succed(supplier.get());
         } catch (final Exception error) {
-            return error(error);
+            return failed(error);
         }
     }
 
@@ -63,8 +63,8 @@ public interface Result<T> {
         Require.checkNotNull(optional, "The optional value cannot be null");
 
         return optional
-            .map(Result::ok)
-            .orElseGet(() -> error(new NoSuchElementException("No value present when unwrapping the optional")));
+            .map(Result::succed)
+            .orElseGet(() -> failed(new NoSuchElementException("No value present when unwrapping the optional")));
     }
 
     static <T> Result<T> ofNullable(final T value) {
@@ -75,7 +75,7 @@ public interface Result<T> {
         Require.checkNotNull(errorSupplier, "The error supplier cannot be null");
 
         return Objects.nonNull(value)
-            ? ok(value)
-            :error(errorSupplier.get());
+            ? succed(value)
+            : failed(errorSupplier.get());
     }
 }

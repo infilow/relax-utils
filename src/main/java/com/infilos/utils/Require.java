@@ -25,75 +25,99 @@ public final class Require {
         }
     }
 
-    public static void checkNotNull(Object object) {
+    public static <T> T checkNotNull(T object) {
         if (Objects.isNull(object)) {
             throw new IllegalArgumentException("null object");
         }
+        
+        return object;
     }
 
-    public static void checkNotNull(Object object, String message) {
+    public static <T> T checkNotNull(T object, String message) {
         if (Objects.isNull(object)) {
             throw new IllegalArgumentException(message);
         }
+
+        return object;
     }
 
-    public static void checkNotNull(Object object, String template, Object... args) {
+    public static <T> T checkNotNull(T object, String template, Object... args) {
         if (Objects.isNull(object)) {
             throw new IllegalArgumentException(String.format(template, args));
         }
+
+        return object;
     }
 
-    public static void checkNotBlank(String string) {
+    public static String checkNotBlank(String string) {
         if (Objects.isNull(string) || string.trim().isEmpty()) {
             throw new IllegalArgumentException("blank string");
         }
+        
+        return string;
     }
 
-    public static void checkNotBlank(String string, String message) {
+    public static String checkNotBlank(String string, String message) {
         if (Objects.isNull(string) || string.trim().isEmpty()) {
             throw new IllegalArgumentException(message);
         }
+
+        return string;
     }
 
-    public static void checkNotBlank(String string, String template, Object... args) {
+    public static String checkNotBlank(String string, String template, Object... args) {
         if (Objects.isNull(string) || string.trim().isEmpty()) {
             throw new IllegalArgumentException(String.format(template, args));
         }
+
+        return string;
     }
 
-    public static void checkNotEmpty(Collection<?> collection) {
+    public static <T> Collection<T> checkNotEmpty(Collection<T> collection) {
         if (Objects.isNull(collection) || collection.isEmpty()) {
             throw new IllegalArgumentException("empty collection");
         }
+        
+        return collection;
     }
 
-    public static void checkNotEmpty(Collection<?> collection, String message) {
+    public static <T> Collection<T> checkNotEmpty(Collection<T> collection, String message) {
         if (Objects.isNull(collection) || collection.isEmpty()) {
             throw new IllegalArgumentException(message);
         }
+
+        return collection;
     }
 
-    public static void checkNotEmpty(Collection<?> collection, String template, Object... args) {
+    public static <T> Collection<T> checkNotEmpty(Collection<T> collection, String template, Object... args) {
         if (Objects.isNull(collection) || collection.isEmpty()) {
             throw new IllegalArgumentException(String.format(template, args));
         }
+
+        return collection;
     }
 
-    public static <T> void checkNotEmpty(T[] array) {
+    public static <T> T[] checkNotEmpty(T[] array) {
         if (Objects.isNull(array) || array.length==0) {
             throw new IllegalArgumentException("empty array");
         }
+        
+        return array;
     }
 
-    public static <T> void checkNotEmpty(T[] array, String message) {
+    public static <T> T[] checkNotEmpty(T[] array, String message) {
         if (Objects.isNull(array) || array.length==0) {
             throw new IllegalArgumentException(message);
         }
+
+        return array;
     }
 
-    public static <T> void checkNotEmpty(T[] array, String template, Object... args) {
+    public static <T> T[] checkNotEmpty(T[] array, String template, Object... args) {
         if (Objects.isNull(array) || array.length==0) {
             throw new IllegalArgumentException(String.format(template, args));
         }
+
+        return array;
     }
 }

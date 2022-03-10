@@ -1,5 +1,11 @@
 package com.infilos.utils;
 
+import com.infilos.reflect.Classes;
+
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletionStage;
+import java.util.function.Consumer;
+
 /**
  * @author zhiguang.zhang on 2020-12-09.
  */
@@ -20,5 +26,27 @@ public final class Threads {
             Thread.sleep(seconds * 1000);
         } catch (InterruptedException ignore) {
         }
+    }
+
+    public static CompletionStage<?> ifCancelled(CompletionStage<?> stage, Consumer<? super CancellationException> action) {
+        Require.checkNotNull(action);
+        
+        return stage.exceptionally(e -> {
+            Classes.cast(e, CancellationException.class).ifPresent(action);
+            return null;
+        });
+    }
+
+    /** Propagates cancellation from {@code outer} to {@code inner}. */
+    public static <T> CompletionStage<T> propagateCancellation(CompletionStage<T> outer, CompletionStage<?> inner) {
+        Require.checkNotNull(inner);
+
+        Threads.ifCancelled(outer, e -> {
+            // Even if this isn't supported, the worst is that we don't propagate cancellation.
+            // But that's fine because without a Future we cannot propagate anyway.
+            inner.toCompletableFuture().completeExceptionally(e);
+        });
+
+        return outer;
     }
 }

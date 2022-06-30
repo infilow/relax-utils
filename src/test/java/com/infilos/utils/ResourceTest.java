@@ -18,10 +18,13 @@ public class ResourceTest {
 
     @Test
     public void test() throws URISyntaxException, IOException {
+        assertNotNull(Resource.readAsUrl("file.txt"));
         assertNotNull(Resource.readAsFile("file.txt"));
         assertTrue(Resource.readAsFile("file.txt").isFile());
         assertNotNull(Resource.readAsStream("file.txt"));
+        assertNotNull(Resource.readAsBytes("file.txt"));
         assertEquals(3, Resource.readAsLines("file.txt").size());
+        assertEquals(1, Resource.readAsLines("file.txt", 1).size());
         assertEquals("a\nb\nc", Resource.readAsString("file.txt"));
     }
     

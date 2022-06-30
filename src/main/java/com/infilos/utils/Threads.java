@@ -1,14 +1,10 @@
 package com.infilos.utils;
 
-import com.infilos.reflect.Classes;
+import com.infilos.reflect.TypeHelper;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.CompletionStage;
 import java.util.function.Consumer;
-
-/**
- * @author zhiguang.zhang on 2020-12-09.
- */
 
 public final class Threads {
     private Threads() {
@@ -32,7 +28,7 @@ public final class Threads {
         Require.checkNotNull(action);
         
         return stage.exceptionally(e -> {
-            Classes.cast(e, CancellationException.class).ifPresent(action);
+            TypeHelper.cast(e, CancellationException.class).ifPresent(action);
             return null;
         });
     }

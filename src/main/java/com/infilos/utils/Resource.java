@@ -7,25 +7,25 @@ import java.nio.file.*;
 import java.util.*;
 
 /**
- * @author zhiguang.zhang on 2020-12-09.
- *
- * Read files locate at 'src/main/resources'.
+ * Read files locate at 'src/main/resources', support file in jar.
  */
-
 public final class Resource {
     private Resource() {
     }
 
     public static URL readAsUrl(String pathOfResource) {
-        return Resource.class.getResource(fixPathOfResource(pathOfResource));
+        return Resource.class.getResource(fixPathPrefix(pathOfResource));
     }
 
     public static File readAsFile(String pathOfResource) throws URISyntaxException {
-        return new File(Resource.class.getResource(fixPathOfResource(pathOfResource)).toURI());
+        URL url = Require.checkNotNull(Resource.class.getResource(fixPathPrefix(pathOfResource)), "getResource got null");
+        assert Objects.nonNull(url);
+
+        return new File(url.toURI());
     }
 
     public static InputStream readAsStream(String pathOfResource) {
-        return Resource.class.getResourceAsStream(fixPathOfResource(pathOfResource));
+        return Resource.class.getResourceAsStream(fixPathPrefix(pathOfResource));
     }
 
     public static List<String> readAsLines(String pathOfResource, int limit) throws IOException {
@@ -35,8 +35,8 @@ public final class Resource {
 
         while (reader.ready()) {
             lines.add(reader.readLine());
-            
-            if(limit >= 0 && lines.size() >= limit) {
+
+            if (limit >= 0 && lines.size() >= limit) {
                 break;
             }
         }
@@ -63,21 +63,22 @@ public final class Resource {
         return bytes;
     }
 
-    private static String fixPathOfResource(String pathOfResource) {
+    private static String fixPathPrefix(String pathOfResource) {
         return pathOfResource.startsWith("/") ? pathOfResource : "/" + pathOfResource;
     }
 
     /**
      * File would appear in "/target/classes" or "/target/test-classes".
      */
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static File writeResource(String filename, byte[] bytes) throws IOException {
         URL resourceUrl = Resource.class.getResource("/");
-        if(Objects.isNull(resourceUrl)) {
+        if (Objects.isNull(resourceUrl)) {
             throw new IllegalArgumentException("Cannot find resource folder with '/'.");
         }
-        
+
         Path resource = Paths.get(resourceUrl.getPath());
-        File file = new File(resource.toAbsolutePath() + fixPathOfResource(filename));
+        File file = new File(resource.toAbsolutePath() + fixPathPrefix(filename));
 
         if (!file.exists()) {
             file.createNewFile();

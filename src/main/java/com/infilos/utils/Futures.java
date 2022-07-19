@@ -14,9 +14,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collector;
 
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.*;
 
 /**
  * CompletableFuture utils.
@@ -38,8 +36,8 @@ public final class Futures {
      * <p> If no stages are provided, returns a future holding an empty list.
      *
      * @param stages the stages to combine
-     * @param <T> the common super-type of all of the input stages, that determines the monomorphic
-     * type of the output future
+     * @param <T>    the common super-type of all of the input stages, that determines the monomorphic
+     *               type of the output future
      *
      * @return a future that completes to a list of the results of the supplied stages
      *
@@ -57,8 +55,8 @@ public final class Futures {
 
         CompletableFuture<Void> allOf = CompletableFuture.allOf(all);
 
-        for (int i = 0; i < all.length; i++) {
-            all[i].exceptionally(throwable -> {
+        for (CompletableFuture<? extends T> future : all) {
+            future.exceptionally(throwable -> {
                 if (!allOf.isDone()) {
                     allOf.completeExceptionally(throwable);
                 }
@@ -87,7 +85,7 @@ public final class Futures {
      * @param map the map of stages to combine
      * @param <U> the common super-type of the keys
      * @param <T> the common super-type of all of the input value-stages, that determines the
-     * monomorphic type of the output future
+     *            monomorphic type of the output future
      *
      * @return a future that completes to a map of the results of the supplied keys and value-stages
      *
@@ -120,11 +118,11 @@ public final class Futures {
      *
      * <p>If no stages are provided, returns a future holding an empty list.
      *
-     * @param stages the stages to combine.
+     * @param stages             the stages to combine.
      * @param defaultValueMapper a function that will be called when a future completes exceptionally
-     * to provide a default value to place in the resulting list
-     * @param <T> the common type of all of the input stages, that determines the type of the
-     * output future
+     *                           to provide a default value to place in the resulting list
+     * @param <T>                the common type of all of the input stages, that determines the type of the
+     *                           output future
      *
      * @return a future that completes to a list of the results of the supplied stages
      *
@@ -142,9 +140,9 @@ public final class Futures {
      * the given exception.
      *
      * @param throwable the exception
-     * @param <T> an arbitrary type for the returned future; can be anything since the future
-     * will be exceptionally completed and thus there will never be a value of type
-     * {@code T}
+     * @param <T>       an arbitrary type for the returned future; can be anything since the future
+     *                  will be exceptionally completed and thus there will never be a value of type
+     *                  {@code T}
      *
      * @return a future that exceptionally completed with the supplied exception
      *
@@ -177,7 +175,7 @@ public final class Futures {
      * {@link CompletionException} holding this exception as its cause.
      *
      * @param <T> the common super-type of all of the input stages, that determines the monomorphic
-     * type of the output future
+     *            type of the output future
      * @param <S> the implementation of {@link CompletionStage} that the stream contains
      *
      * @return a new {@link CompletableFuture} according to the rules outlined in the method
@@ -208,12 +206,12 @@ public final class Futures {
      * complete exceptionally, then the returned CompletableFuture also does so, with a
      * {@link CompletionException} holding this exception as its cause.
      *
-     * @param keyMapper a mapping function to produce keys
+     * @param keyMapper         a mapping function to produce keys
      * @param valueFutureMapper a mapping function to produce futures that will eventually produce
-     * the values
-     * @param <T> the type of the input elements
-     * @param <K> the output type of the key mapping function
-     * @param <V> the common super-type of the stages returned by the value future mapping function
+     *                          the values
+     * @param <T>               the type of the input elements
+     * @param <K>               the output type of the key mapping function
+     * @param <V>               the common super-type of the stages returned by the value future mapping function
      *
      * @return a new {@link CompletableFuture} according to the rules outlined in the method
      * description
@@ -245,7 +243,7 @@ public final class Futures {
      * Gets the value of a completed stage.
      *
      * @param stage a completed {@link CompletionStage}
-     * @param <T> the type of the value that the stage completes into
+     * @param <T>   the type of the value that the stage completes into
      *
      * @return the value of the stage if it has one
      *
@@ -262,14 +260,14 @@ public final class Futures {
      * Gets the exception from an exceptionally completed future
      *
      * @param stage an exceptionally completed {@link CompletionStage}
-     * @param <T> the type of the value that the stage completes into
+     * @param <T>   the type of the value that the stage completes into
      *
      * @return the exception the stage has completed with
      *
-     * @throws IllegalStateException if the stage is not completed exceptionally
-     * @throws CancellationException if the stage was cancelled
+     * @throws IllegalStateException         if the stage is not completed exceptionally
+     * @throws CancellationException         if the stage was cancelled
      * @throws UnsupportedOperationException if the {@link CompletionStage} does not
-     * support the {@link CompletionStage#toCompletableFuture()} operation
+     *                                       support the {@link CompletionStage#toCompletableFuture()} operation
      */
     public static <T> Throwable getException(CompletionStage<T> stage) {
         CompletableFuture<T> future = stage.toCompletableFuture();
@@ -298,10 +296,10 @@ public final class Futures {
      * directly.
      *
      * @param stage the {@link CompletionStage} to compose
-     * @param fn the function to use to compute the value of the
-     * returned {@link CompletionStage}
-     * @param <T> the type of the input stage's value.
-     * @param <U> the function's return type
+     * @param fn    the function to use to compute the value of the
+     *              returned {@link CompletionStage}
+     * @param <T>   the type of the input stage's value.
+     * @param <U>   the function's return type
      *
      * @return the new {@link CompletionStage}
      *
@@ -325,10 +323,10 @@ public final class Futures {
      * the value directly.
      *
      * @param stage the {@link CompletionStage} to compose
-     * @param fn the function to use to compute the value of the
-     * returned {@link CompletionStage} if this stage completed
-     * exceptionally
-     * @param <T> the type of the input stage's value.
+     * @param fn    the function to use to compute the value of the
+     *              returned {@link CompletionStage} if this stage completed
+     *              exceptionally
+     * @param <T>   the type of the input stage's value.
      *
      * @return the new {@link CompletionStage}
      *
@@ -343,7 +341,7 @@ public final class Futures {
      * This takes a stage of a stage of a value and returns a plain stage of a value.
      *
      * @param stage a {@link CompletionStage} of a {@link CompletionStage} of a value
-     * @param <T> the type of the inner stage's value.
+     * @param <T>   the type of the inner stage's value.
      *
      * @return the {@link CompletionStage} of the value
      *
@@ -354,19 +352,18 @@ public final class Futures {
     }
 
     private static <T> CompletionStage<CompletionStage<T>> wrap(CompletionStage<T> future) {
-        //noinspection unchecked
         return future.thenApply(CompletableFuture::completedFuture);
     }
 
     /**
      * Combines multiple stages by applying a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
      * @param function the combining function.
-     * @param <R> the type of the combining function's return value.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
+     * @param <R>      the type of the combining function's return value.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -380,14 +377,14 @@ public final class Futures {
     /**
      * Combines multiple stages by applying a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
      * @param function the combining function.
-     * @param <R> the type of the combining function's return value.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
+     * @param <R>      the type of the combining function's return value.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -408,16 +405,16 @@ public final class Futures {
     /**
      * Combines multiple stages by applying a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
      * @param function the combining function.
-     * @param <R> the type of the combining function's return value.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
+     * @param <R>      the type of the combining function's return value.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -440,18 +437,18 @@ public final class Futures {
     /**
      * Combines multiple stages by applying a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
-     * @param e the fifth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
+     * @param e        the fifth stage.
      * @param function the combining function.
-     * @param <R> the type of the combining function's return value.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
-     * @param <E> the type of the fifth stage's value.
+     * @param <R>      the type of the combining function's return value.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
+     * @param <E>      the type of the fifth stage's value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -477,20 +474,20 @@ public final class Futures {
     /**
      * Combines multiple stages by applying a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
-     * @param e the fifth stage.
-     * @param f the sixth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
+     * @param e        the fifth stage.
+     * @param f        the sixth stage.
      * @param function the combining function.
-     * @param <R> the type of the combining function's return value.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
-     * @param <E> the type of the fifth stage's value.
-     * @param <F> the type of the sixth stage's value.
+     * @param <R>      the type of the combining function's return value.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
+     * @param <E>      the type of the fifth stage's value.
+     * @param <F>      the type of the sixth stage's value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -524,8 +521,8 @@ public final class Futures {
      * Combines multiple stages by applying a function.
      *
      * @param function the combining function.
-     * @param stages the stages to combine
-     * @param <T> the type of the combining function's return value.
+     * @param stages   the stages to combine
+     * @param <T>      the type of the combining function's return value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -533,15 +530,15 @@ public final class Futures {
      */
     public static <T> CompletionStage<T> combine(Function<CombinedFutures, T> function,
                                                  CompletionStage<?>... stages) {
-        return combine(function, Arrays.asList(stages));
+        return combine(function, java.util.Arrays.asList(stages));
     }
 
     /**
      * Combines multiple stages by applying a function.
      *
      * @param function the combining function.
-     * @param stages the stages to combine
-     * @param <T> the type of the combining function's return value.
+     * @param stages   the stages to combine
+     * @param <T>      the type of the combining function's return value.
      *
      * @return a stage that completes into the return value of the supplied function.
      *
@@ -549,7 +546,7 @@ public final class Futures {
      */
     public static <T> CompletionStage<T> combine(Function<CombinedFutures, T> function,
                                                  List<? extends CompletionStage<?>> stages) {
-        @SuppressWarnings("unchecked") // generic array creation
+        // generic array creation
         final CompletableFuture<?>[] all = new CompletableFuture[stages.size()];
         for (int i = 0; i < stages.size(); i++) {
             all[i] = stages.get(i).toCompletableFuture();
@@ -560,17 +557,17 @@ public final class Futures {
     /**
      * Composes multiple stages into another stage using a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
      * @param function the combining function.
-     * @param <R> the type of the composed {@link CompletionStage}.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
+     * @param <R>      the type of the composed {@link CompletionStage}.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
      *
      * @return a stage that is composed from the input stages using the function.
      *
      * @throws UnsupportedOperationException if any of the {@link CompletionStage}s
-     * do not interoperate with CompletableFuture
+     *                                       do not interoperate with CompletableFuture
      */
     public static <R, A, B> CompletionStage<R> combineFutures(CompletionStage<A> a,
                                                               CompletionStage<B> b,
@@ -585,19 +582,19 @@ public final class Futures {
     /**
      * Composes multiple stages into another stage using a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
      * @param function the combining function.
-     * @param <R> the type of the composed {@link CompletionStage}.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
+     * @param <R>      the type of the composed {@link CompletionStage}.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
      *
      * @return a stage that is composed from the input stages using the function.
      *
      * @throws UnsupportedOperationException if any of the {@link CompletionStage}s
-     * do not interoperate with CompletableFuture
+     *                                       do not interoperate with CompletableFuture
      */
     public static <R, A, B, C> CompletionStage<R> combineFutures(CompletionStage<A> a,
                                                                  CompletionStage<B> b,
@@ -610,27 +607,28 @@ public final class Futures {
         return CompletableFuture.allOf(af, bf, cf)
             .thenCompose(ignored -> function.apply(af.join(),
                 bf.join(),
-                cf.join()));
+                cf.join())
+            );
     }
 
     /**
      * Composes multiple stages into another stage using a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
      * @param function the combining function.
-     * @param <R> the type of the composed {@link CompletionStage}.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
+     * @param <R>      the type of the composed {@link CompletionStage}.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
      *
      * @return a stage that is composed from the input stages using the function.
      *
      * @throws UnsupportedOperationException if any of the {@link CompletionStage}s
-     * do not interoperate with CompletableFuture
+     *                                       do not interoperate with CompletableFuture
      */
     public static <R, A, B, C, D> CompletionStage<R> combineFutures(CompletionStage<A> a,
                                                                     CompletionStage<B> b,
@@ -649,23 +647,23 @@ public final class Futures {
     /**
      * Composes multiple stages into another stage using a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
-     * @param e the fifth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
+     * @param e        the fifth stage.
      * @param function the combining function.
-     * @param <R> the type of the composed {@link CompletionStage}.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
-     * @param <E> the type of the fifth stage's value.
+     * @param <R>      the type of the composed {@link CompletionStage}.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
+     * @param <E>      the type of the fifth stage's value.
      *
      * @return a stage that is composed from the input stages using the function.
      *
      * @throws UnsupportedOperationException if any of the {@link CompletionStage}s
-     * do not interoperate with CompletableFuture
+     *                                       do not interoperate with CompletableFuture
      */
     public static <R, A, B, C, D, E> CompletionStage<R> combineFutures(CompletionStage<A> a,
                                                                        CompletionStage<B> b,
@@ -690,25 +688,25 @@ public final class Futures {
     /**
      * Composes multiple stages into another stage using a function.
      *
-     * @param a the first stage.
-     * @param b the second stage.
-     * @param c the third stage.
-     * @param d the fourth stage.
-     * @param e the fifth stage.
-     * @param f the sixth stage.
+     * @param a        the first stage.
+     * @param b        the second stage.
+     * @param c        the third stage.
+     * @param d        the fourth stage.
+     * @param e        the fifth stage.
+     * @param f        the sixth stage.
      * @param function the combining function.
-     * @param <R> the type of the composed {@link CompletionStage}.
-     * @param <A> the type of the first stage's value.
-     * @param <B> the type of the second stage's value.
-     * @param <C> the type of the third stage's value.
-     * @param <D> the type of the fourth stage's value.
-     * @param <E> the type of the fifth stage's value.
-     * @param <F> the type of the sixth stage's value.
+     * @param <R>      the type of the composed {@link CompletionStage}.
+     * @param <A>      the type of the first stage's value.
+     * @param <B>      the type of the second stage's value.
+     * @param <C>      the type of the third stage's value.
+     * @param <D>      the type of the fourth stage's value.
+     * @param <E>      the type of the fifth stage's value.
+     * @param <F>      the type of the sixth stage's value.
      *
      * @return a stage that is composed from the input stages using the function.
      *
      * @throws UnsupportedOperationException if any of the {@link CompletionStage}s
-     * do not interoperate with CompletableFuture
+     *                                       do not interoperate with CompletableFuture
      */
     public static <R, A, B, C, D, E, F> CompletionStage<R> combineFutures(CompletionStage<A> a,
                                                                           CompletionStage<B> b,
@@ -747,11 +745,11 @@ public final class Futures {
      * operations or a long polling frequency, consider setting {@code removeOnCancelPolicy} to true.
      * See {@link java.util.concurrent.ScheduledThreadPoolExecutor#setRemoveOnCancelPolicy(boolean)}.
      *
-     * @param pollingTask the polling task
-     * @param frequency the frequency to run the polling task at
+     * @param pollingTask     the polling task
+     * @param frequency       the frequency to run the polling task at
      * @param executorService the executor service to schedule the polling task on
-     * @param <T> the type of the result of the polling task, that will be returned when
-     * the task succeeds.
+     * @param <T>             the type of the result of the polling task, that will be returned when
+     *                        the task succeeds.
      *
      * @return a future completing to the result of the polling task once that becomes available
      */
@@ -762,6 +760,7 @@ public final class Futures {
         final ScheduledFuture<?> scheduled = executorService.scheduleAtFixedRate(
             () -> pollTask(pollingTask, result), 0, frequency.toMillis(), TimeUnit.MILLISECONDS);
         result.whenComplete((r, ex) -> scheduled.cancel(true));
+
         return result;
     }
 

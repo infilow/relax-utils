@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
  * String summary = timer.costSummary();
  * </pre>
  */
+@SuppressWarnings("unused")
 public final class Timer {
     private final String name;
     private long start = System.nanoTime();
@@ -125,8 +126,8 @@ public final class Timer {
         long seconds = TimeUnit.MILLISECONDS.toSeconds(costMillis) % 60;
         long millis = costMillis % 1000;
 
-        List<Long> costs = Arrays.asList(days, hours, minutes, seconds, millis);
-        List<String> units = Arrays.asList("Days", "Hours", "Minutes", "Seconds", "Millis");
+        List<Long> costs = java.util.Arrays.asList(days, hours, minutes, seconds, millis);
+        List<String> units = java.util.Arrays.asList("Days", "Hours", "Minutes", "Seconds", "Millis");
 
         int left = 0;
         int right = 5;

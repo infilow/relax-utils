@@ -39,7 +39,7 @@ public final class Numbers {
     }
 
     public static double sub(Double v1, Double v2) {
-        return sub((Number) v1, (Number) v2).doubleValue();
+        return sub(v1, (Number) v2).doubleValue();
     }
 
     public static BigDecimal sub(Number v1, Number v2) {
@@ -59,7 +59,7 @@ public final class Numbers {
     }
 
     public static double mul(Double v1, Double v2) {
-        return mul((Number) v1, (Number) v2).doubleValue();
+        return mul(v1, (Number) v2).doubleValue();
     }
 
     public static BigDecimal mul(Number v1, Number v2) {
@@ -111,7 +111,7 @@ public final class Numbers {
     }
 
     public static double div(Double v1, Double v2, int scale, RoundingMode roundingMode) {
-        return div((Number) v1, (Number) v2, scale, roundingMode).doubleValue();
+        return div(v1, (Number) v2, scale, roundingMode).doubleValue();
     }
 
     public static BigDecimal div(Number v1, Number v2, int scale, RoundingMode roundingMode) {
@@ -241,7 +241,8 @@ public final class Numbers {
 
     public static boolean isDouble(String s) {
         try {
-            Double.parseDouble(s); if (s.contains(".")) return true; return false;
+            Double.parseDouble(s);
+            return s.contains(".");
         } catch (NumberFormatException e) {
             return false;
         }
@@ -340,33 +341,15 @@ public final class Numbers {
     }
 
     public static int compare(int x, int y) {
-        if (x == y) {
-            return 0;
-        } if (x < y) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Integer.compare(x, y);
     }
 
     public static int compare(long x, long y) {
-        if (x == y) {
-            return 0;
-        } if (x < y) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Long.compare(x, y);
     }
 
     public static int compare(short x, short y) {
-        if (x == y) {
-            return 0;
-        } if (x < y) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return Short.compare(x, y);
     }
 
     public static int compare(byte x, byte y) {
@@ -418,13 +401,9 @@ public final class Numbers {
     public static boolean isValidIfNumber(Object obj) {
         if (obj instanceof Number) {
             if (obj instanceof Double) {
-                if (((Double) obj).isInfinite() || ((Double) obj).isNaN()) {
-                    return false;
-                }
+                return !((Double) obj).isInfinite() && !((Double) obj).isNaN();
             } else if (obj instanceof Float) {
-                if (((Float) obj).isInfinite() || ((Float) obj).isNaN()) {
-                    return false;
-                }
+                return !((Float) obj).isInfinite() && !((Float) obj).isNaN();
             }
         } return true;
     }

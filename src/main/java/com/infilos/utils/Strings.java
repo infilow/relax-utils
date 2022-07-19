@@ -621,15 +621,15 @@ public final class Strings {
         return str.toString().getBytes(charset);
     }
 
-    public static String from(Object obj) {
-        return from(obj, StandardCharsets.UTF_8);
+    public static String of(Object obj) {
+        return of(obj, StandardCharsets.UTF_8);
     }
 
-    public static String from(Object obj, String charsetName) {
-        return from(obj, Charset.forName(charsetName));
+    public static String of(Object obj, String charsetName) {
+        return of(obj, Charset.forName(charsetName));
     }
 
-    public static String from(Object obj, Charset charset) {
+    public static String of(Object obj, Charset charset) {
         if (null == obj) {
             return null;
         }
@@ -637,11 +637,11 @@ public final class Strings {
         if (obj instanceof String) {
             return (String) obj;
         } else if (obj instanceof byte[]) {
-            return from((byte[]) obj, charset);
+            return of((byte[]) obj, charset);
         } else if (obj instanceof Byte[]) {
-            return from((Byte[]) obj, charset);
+            return of((Byte[]) obj, charset);
         } else if (obj instanceof ByteBuffer) {
-            return from((ByteBuffer) obj, charset);
+            return of((ByteBuffer) obj, charset);
         } else if (Arrays.isArray(obj)) {
             return Arrays.toString(obj);
         }
@@ -649,11 +649,11 @@ public final class Strings {
         return obj.toString();
     }
 
-    public static String from(byte[] bytes, String charset) {
-        return from(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+    public static String of(byte[] bytes, String charset) {
+        return of(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
     }
 
-    public static String from(byte[] data, Charset charset) {
+    public static String of(byte[] data, Charset charset) {
         if (data == null) {
             return null;
         }
@@ -664,11 +664,11 @@ public final class Strings {
         return new String(data, charset);
     }
 
-    public static String from(Byte[] bytes, String charset) {
-        return from(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+    public static String of(Byte[] bytes, String charset) {
+        return of(bytes, isBlank(charset) ? Charset.defaultCharset() : Charset.forName(charset));
     }
 
-    public static String from(Byte[] data, Charset charset) {
+    public static String of(Byte[] data, Charset charset) {
         if (data == null) {
             return null;
         }
@@ -680,18 +680,18 @@ public final class Strings {
             bytes[i] = (null == dataByte) ? -1 : dataByte;
         }
 
-        return from(bytes, charset);
+        return of(bytes, charset);
     }
 
-    public static String from(ByteBuffer data, String charset) {
+    public static String of(ByteBuffer data, String charset) {
         if (data == null) {
             return null;
         }
 
-        return from(data, Charset.forName(charset));
+        return of(data, Charset.forName(charset));
     }
 
-    public static String from(ByteBuffer data, Charset charset) {
+    public static String of(ByteBuffer data, Charset charset) {
         if (null == charset) {
             charset = Charset.defaultCharset();
         }

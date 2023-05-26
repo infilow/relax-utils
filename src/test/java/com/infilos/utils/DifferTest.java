@@ -5,8 +5,6 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
-
 public class DifferTest {
     
     public static class Person {
@@ -31,8 +29,8 @@ public class DifferTest {
     public void test() {
         String val1 = "val1";
         String val2 = "val2";
-        List<Integer> list1 = Arrays.asList(1,2);
-        List<Integer> list2 = Arrays.asList(3,4);
+        List<Integer> list1 = java.util.Arrays.asList(1,2);
+        List<Integer> list2 = java.util.Arrays.asList(3,4);
         Person person1 = new Person("Anna", 22);
         Person person2 = new Person("Luna", 23);
         

@@ -6,8 +6,8 @@ import com.infilos.utils.Arrays;
 import java.lang.reflect.*;
 import java.util.*;
 
-public final class Classes {
-    private Classes() {
+public final class ClassHelper {
+    private ClassHelper() {
     }
 
     static final Map<String, Class<?>> PRIMITIVES = new HashMap<String, Class<?>>() {{
@@ -296,7 +296,7 @@ public final class Classes {
             return null;
         }
 
-        final Iterable<Method> methods = Classes.findMethods(clazz);
+        final Iterable<Method> methods = ClassHelper.findMethods(clazz);
         if (Arrays.isNotEmpty(methods)) {
             for (Method method : methods) {
                 if (methodName.equals(method.getName())) {
@@ -311,7 +311,7 @@ public final class Classes {
     }
 
     public static Method findMethod(Class<?> beanClass, String name) throws SecurityException {
-        for (Method method : Classes.findMethods(beanClass)) {
+        for (Method method : ClassHelper.findMethods(beanClass)) {
             if ((name.equals(method.getName()))) {
                 return method;
             }
@@ -321,7 +321,7 @@ public final class Classes {
 
     public static Set<String> findMethodNames(Class<?> clazz) {
         final HashSet<String> methodSet = new HashSet<>();
-        for (Method method : Classes.findMethods(clazz)) {
+        for (Method method : ClassHelper.findMethods(clazz)) {
             methodSet.add(method.getName());
         }
         return methodSet;
@@ -501,6 +501,18 @@ public final class Classes {
         }
 
         return method.getGenericReturnType();
+    }
+
+    public static Class<?> getTypeArgument(Class<?> clazz) {
+        return getTypeArgument(clazz, 0);
+    }
+    
+    public static Class<?> getTypeArgument(Class<?> clazz, int index) {
+        final Type argumentType = findTypeArgumentOfType(clazz, index);
+        if (argumentType instanceof Class) {
+            return (Class<?>) argumentType;
+        }
+        return null;
     }
 
     public static Type findTypeArgumentOfClass(Class<?> clazz) {

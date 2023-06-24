@@ -2,7 +2,9 @@ package com.infilos.api;
 
 import com.infilos.utils.Require;
 
-/** A function that can throw checked exceptions. */
+/**
+ * A function that can throw checked exceptions.
+ */
 @FunctionalInterface
 public interface CheckedFunction<F, T, E extends Throwable> {
     T apply(F from) throws E;

@@ -2,7 +2,9 @@ package com.infilos.api;
 
 import com.infilos.utils.Require;
 
-/** A supplier that can throw checked exceptions. */
+/**
+ * A supplier that can throw checked exceptions.
+ */
 @FunctionalInterface
 public interface CheckedSupplier<T, E extends Throwable> {
     T get() throws E;

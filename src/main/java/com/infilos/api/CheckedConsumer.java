@@ -2,7 +2,9 @@ package com.infilos.api;
 
 import com.infilos.utils.Require;
 
-/** A consumer that can throw checked exceptions. */
+/**
+ * A consumer that can throw checked exceptions.
+ */
 @FunctionalInterface
 public interface CheckedConsumer<T, E extends Throwable> {
     void accept(T input) throws E;

@@ -38,18 +38,19 @@ public final class ClassField {
             proxyFactory.setSuperclass(typeClass);
 
             T fakeEntity = (T) proxyFactory.create(
-                new Class<?>[0],
-                new Object[0],
-                ((o, method, method1, objects) -> {
-                    fieldName.append(getterToFieldName(method.getName()));
-                    return getValidReturnValue(method);
-                })
+                    new Class<?>[0],
+                    new Object[0],
+                    ((o, method, method1, objects) -> {
+                        fieldName.append(getterToFieldName(method.getName()));
+                        return getValidReturnValue(method);
+                    })
             );
 
             entityFieldGetter.apply(fakeEntity);
 
             return fieldName.toString();
-        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException | IllegalAccessException e) {
+        } catch (InvocationTargetException | NoSuchMethodException | InstantiationException |
+                 IllegalAccessException e) {
             throw new IllegalArgumentException("unable to determine name of field for provided getter", e);
         }
     }
@@ -88,7 +89,7 @@ public final class ClassField {
 
         if (methodName.length() <= cutOffLength + 1) {
             throw new IllegalArgumentException(
-                String.format("method name \"%s\" is not according to convention for a getter", methodName));
+                    String.format("method name \"%s\" is not according to convention for a getter", methodName));
         }
 
         return Character.toLowerCase(methodName.charAt(cutOffLength)) + methodName.substring(cutOffLength + 1);

@@ -13,11 +13,11 @@ public final class Annotate {
 
     public static List<Annotation> ofClass(Class<?> clazz, boolean inherited) {
         Require.check(Objects.nonNull(clazz), "Class must not be null.");
-        
+
         List<Annotation> annotations = new ArrayList<>();
 
         Collections.addAll(annotations, clazz.getDeclaredAnnotations());
-        if(!inherited) {
+        if (!inherited) {
             return annotations;
         }
 
@@ -27,19 +27,19 @@ public final class Annotate {
         for (Class<?> superInterface : findAllInterfaces(clazz)) {
             Collections.addAll(annotations, superInterface.getDeclaredAnnotations());
         }
-        
+
         return annotations;
     }
 
     public static List<Annotation> ofMethodDeclaringClass(Method method, boolean inherited) {
         Require.check(Objects.nonNull(method), "Method must not be null.");
-        
+
         return ofClass(method.getDeclaringClass(), inherited);
     }
 
     public static List<Annotation> ofMethod(Method method, boolean inherited) {
         Require.check(Objects.nonNull(method), "Method must not be null.");
-        
+
         List<Annotation> annotations = new ArrayList<>();
 
         Collections.addAll(annotations, method.getDeclaredAnnotations());
@@ -121,7 +121,7 @@ public final class Annotate {
             return false;
         }
         if ((isPackageAccess(childMods) || isPackageAccess(parentMods))
-            && !Objects.equals(childClass.getPackage(), parentClass.getPackage())) {
+                && !Objects.equals(childClass.getPackage(), parentClass.getPackage())) {
             return false;
         }
         if (!parent.getReturnType().isAssignableFrom(child.getReturnType())) {
@@ -150,16 +150,16 @@ public final class Annotate {
     private static final int ACCESS_MODIFIERS = Modifier.PUBLIC | Modifier.PROTECTED | Modifier.PRIVATE;
 
     private static final List<Integer> ACCESS_ORDER = Arrays.asList(
-        Modifier.PRIVATE,
-        0,
-        Modifier.PROTECTED,
-        Modifier.PUBLIC
+            Modifier.PRIVATE,
+            0,
+            Modifier.PROTECTED,
+            Modifier.PUBLIC
     );
 
     private static int compareAccess(int lhs, int rhs) {
         return Integer.compare(
-            ACCESS_ORDER.indexOf(lhs & ACCESS_MODIFIERS),
-            ACCESS_ORDER.indexOf(rhs & ACCESS_MODIFIERS)
+                ACCESS_ORDER.indexOf(lhs & ACCESS_MODIFIERS),
+                ACCESS_ORDER.indexOf(rhs & ACCESS_MODIFIERS)
         );
     }
 }

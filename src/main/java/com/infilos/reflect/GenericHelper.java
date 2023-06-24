@@ -23,7 +23,7 @@ public final class GenericHelper {
 
     /**
      * Get the generic parameter for a specific interface we implement.  The generic types of other interfaces the specified class may implement will be ignored and not reported.
-     *
+     * <p>
      * If the interface has multiple generic parameters then multiple types will be returned. If the interface has no generic parameters, then a zero-length array is returned. If the class does not implement this interface, null will be
      * returned.
      *
@@ -38,22 +38,22 @@ public final class GenericHelper {
 
         { // Is this one of our immediate interfaces or super classes?
             final Optional<Type[]> types = genericTypes(clazz)
-                .filter(type -> type instanceof ParameterizedType)
-                .map(ParameterizedType.class::cast)
-                .filter(parameterizedType -> intrface.equals(parameterizedType.getRawType()))
-                .map(ParameterizedType::getActualTypeArguments)
-                .findFirst();
+                    .filter(type -> type instanceof ParameterizedType)
+                    .map(ParameterizedType.class::cast)
+                    .filter(parameterizedType -> intrface.equals(parameterizedType.getRawType()))
+                    .map(ParameterizedType::getActualTypeArguments)
+                    .findFirst();
 
             if (types.isPresent()) return types.get();
         }
 
         // Look at our parent and interface parents for the type
         final Type[] types = declaredTypes(clazz)
-            .filter(Objects::nonNull)
-            .map(aClass -> getInterfaceTypes(intrface, aClass))
-            .filter(Objects::nonNull)
-            .findFirst()
-            .orElse(null);
+                .filter(Objects::nonNull)
+                .map(aClass -> getInterfaceTypes(intrface, aClass))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
 
         if (types == null) {
             // Our parent does not implement this interface.  We are
@@ -75,7 +75,7 @@ public final class GenericHelper {
     private static Type resolveParameterizedTypes(final Type parameterized, final Class<?> clazz) {
         // If this isn't actually a variable, return what they passed us
         // as there is nothing to resolve
-        if (!(parameterized instanceof ParameterizedType)){
+        if (!(parameterized instanceof ParameterizedType)) {
             return parameterized;
         }
         final ParameterizedType parameterizedType = (ParameterizedType) parameterized;
@@ -134,7 +134,7 @@ public final class GenericHelper {
     private static Type resolveTypeVariable(final Type variable, final Class<?> clazz) {
         // If this isn't actually a variable, return what they passed us
         // as there is nothing to resolve
-        if (!(variable instanceof TypeVariable)){
+        if (!(variable instanceof TypeVariable)) {
             return variable;
         }
         final TypeVariable<?> typeVariable = (TypeVariable<?>) variable;
@@ -162,12 +162,12 @@ public final class GenericHelper {
         // Get the actual type arguments passed from the place where the declaringClass
         // was used by clazz in either an 'extends' or 'implements' context
         final Type[] actualTypes = genericTypes(clazz)
-            .filter(type -> type instanceof ParameterizedType)
-            .map(ParameterizedType.class::cast)
-            .filter(parameterizedType -> declaringClass.equals(parameterizedType.getRawType()))
-            .map(ParameterizedType::getActualTypeArguments)
-            .findFirst()
-            .orElse(null);
+                .filter(type -> type instanceof ParameterizedType)
+                .map(ParameterizedType.class::cast)
+                .filter(parameterizedType -> declaringClass.equals(parameterizedType.getRawType()))
+                .map(ParameterizedType::getActualTypeArguments)
+                .findFirst()
+                .orElse(null);
 
         // We cannot seem to find where the types are specified. We have a
         // feature gap in our code. Return the unresolved variable
@@ -200,7 +200,7 @@ public final class GenericHelper {
                 return i;
             }
         }
-        
+
         return -1;
     }
 

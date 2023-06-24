@@ -54,7 +54,7 @@ public final class TypeHelper {
         }
         return PRIMITIVE_WRAPPERS.containsKey(clazz);
     }
-    
+
     public static boolean isBasicType(Class<?> clazz) {
         if (null == clazz) {
             return false;
@@ -78,14 +78,14 @@ public final class TypeHelper {
 
     public static boolean isSimpleValueType(Class<?> clazz) {
         return isBasicType(clazz)
-            || clazz.isEnum()
-            || CharSequence.class.isAssignableFrom(clazz)
-            || Number.class.isAssignableFrom(clazz)
-            || Date.class.isAssignableFrom(clazz)
-            || clazz.equals(URI.class)
-            || clazz.equals(URL.class)
-            || clazz.equals(Locale.class)
-            || clazz.equals(Class.class);
+                || clazz.isEnum()
+                || CharSequence.class.isAssignableFrom(clazz)
+                || Number.class.isAssignableFrom(clazz)
+                || Date.class.isAssignableFrom(clazz)
+                || clazz.equals(URI.class)
+                || clazz.equals(URL.class)
+                || clazz.equals(Locale.class)
+                || clazz.equals(Class.class);
     }
 
     public static boolean isAssignable(Class<?> targetType, Class<?> sourceType) {
@@ -122,7 +122,7 @@ public final class TypeHelper {
             }
             return true;
         }
-        
+
         return false;
     }
 
@@ -165,14 +165,14 @@ public final class TypeHelper {
 
     public static boolean isNormalClass(Class<?> clazz) {
         return null != clazz
-            && !clazz.isInterface()
-            && !isAbstract(clazz)
-            && !clazz.isEnum()
-            && !clazz.isArray()
-            && !clazz.isAnnotation()
-            && !clazz.isSynthetic()
-            && !clazz.isPrimitive();
-    } 
+                && !clazz.isInterface()
+                && !isAbstract(clazz)
+                && !clazz.isEnum()
+                && !clazz.isArray()
+                && !clazz.isAnnotation()
+                && !clazz.isSynthetic()
+                && !clazz.isPrimitive();
+    }
 
     public static Object getDefaultValue(Class<?> clazz) {
         if (clazz.isPrimitive()) {

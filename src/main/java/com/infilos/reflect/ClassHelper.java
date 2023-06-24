@@ -47,7 +47,7 @@ public final class ClassHelper {
             return className.equals(clazz.getName()) || className.equals(clazz.getSimpleName());
         }
     }
-    
+
     public static Class<?> forName(String string, final ClassLoader classLoader) throws ClassNotFoundException {
         int arrayDimentions = 0;
         while (string.endsWith("[]")) {
@@ -241,7 +241,7 @@ public final class ClassHelper {
         }
         return clazz.getDeclaredFields();
     }
-    
+
     public static Object findFieldValue(Object obj, String fieldName) {
         if (null == obj || Strings.isBlank(fieldName)) {
             return null;
@@ -418,10 +418,11 @@ public final class ClassHelper {
                 if (!hasNext()) throw new NoSuchElementException();
 
                 return new Parameter(
-                    method.getParameterAnnotations()[index],
-                    method.getParameterTypes()[index],
-                    method.getGenericParameterTypes()[index],
-                    index++);
+                        method.getParameterAnnotations()[index],
+                        method.getParameterTypes()[index],
+                        method.getGenericParameterTypes()[index],
+                        index++
+                );
             }
 
             @Override
@@ -445,10 +446,11 @@ public final class ClassHelper {
                 if (!hasNext()) throw new NoSuchElementException();
 
                 return new Parameter(
-                    constructor.getParameterAnnotations()[index],
-                    constructor.getParameterTypes()[index],
-                    constructor.getGenericParameterTypes()[index],
-                    index++);
+                        constructor.getParameterAnnotations()[index],
+                        constructor.getParameterTypes()[index],
+                        constructor.getGenericParameterTypes()[index],
+                        index++
+                );
             }
 
             @Override
@@ -506,7 +508,7 @@ public final class ClassHelper {
     public static Class<?> getTypeArgument(Class<?> clazz) {
         return getTypeArgument(clazz, 0);
     }
-    
+
     public static Class<?> getTypeArgument(Class<?> clazz, int index) {
         final Type argumentType = findTypeArgumentOfType(clazz, index);
         if (argumentType instanceof Class) {

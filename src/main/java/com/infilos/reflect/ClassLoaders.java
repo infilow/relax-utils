@@ -19,7 +19,7 @@ public final class ClassLoaders {
     private static final Map<String, Class<?>> PRIMITIVE_NAME_TYPE = new ConcurrentHashMap<>(32);
 
     static {
-        List<Class<?>> primitiveTypes = new ArrayList<Class<?>>(32){{
+        List<Class<?>> primitiveTypes = new ArrayList<Class<?>>(32) {{
             addAll(TypeHelper.PRIMITIVE_WRAPPERS.keySet());
             add(boolean[].class);
             add(byte[].class);
@@ -29,9 +29,9 @@ public final class ClassLoaders {
             add(int[].class);
             add(long[].class);
             add(short[].class);
-            add(void.class);    
+            add(void.class);
         }};
-        
+
         for (Class<?> primitiveType : primitiveTypes) {
             PRIMITIVE_NAME_TYPE.put(primitiveType.getName(), primitiveType);
         }
